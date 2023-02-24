@@ -28,8 +28,9 @@ fi
 
 while read line
 do
-	if [ "$line"=="Host $1" ]
+	if [ "$line" == "Host $1" ]
 	then
+		echo $line
 		echo "This host already exists"
 		exit
 	fi
@@ -43,12 +44,13 @@ echo -n "hostname(default: $1.com): "
 read hostname
 if [ "$hostname" == "" ]
 then
-	hostname=$1
+	hostname=$1.com
 fi
 echo -n "user: "
 read user
 
-echo "Host $1
-	Hostname $hostname.com
+echo "
+Host $1
+	Hostname $hostname
 	IdentityFile $path/$1/id_rsa
 	User $user" >> $path/config
