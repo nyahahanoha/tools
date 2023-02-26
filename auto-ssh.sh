@@ -2,21 +2,9 @@
 
 path=$HOME/.ssh
 
-if [ "$#" = 0 ]
+if [ $# -lt 2 ]
 then
-	echo 'Usage:ssh-auto.sh host'
-	exit
-fi
-
-if [ -e $path/id_rsa ]
-then
-	echo "Move id_rsa"
-	exit
-fi
-
-if [ -e $path/id_rsa.pub ]
-then
-	echo "Move id_rsa.pub"
+	echo 'Usage:ssh-auto.sh host user (hostname)'
 	exit
 fi
 
@@ -36,21 +24,11 @@ do
 	fi
 done < $path/config
 
-auto-keygen.sh
 mkdir $path/$1
-mv $path/id_rsa{,.pub} $path/$1/
-
-echo -n "hostname(default: $1.com): "
-read hostname
-if [ "$hostname" == "" ]
-then
-	hostname=$1.com
-fi
-echo -n "user: "
-read user
+auto-keygen.sh $1
 
 echo "
 Host $1
-	Hostname $hostname
+	Hostname ${3:-$1.com}
 	IdentityFile $path/$1/id_rsa
-	User $user" >> $path/config
+	User $2" >> $path/config
